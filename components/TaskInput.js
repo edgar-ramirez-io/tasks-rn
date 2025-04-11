@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import {
   Button,
   Image,
@@ -7,16 +7,25 @@ import {
   TextInput,
   View,
 } from "react-native";
+import { TasksContext } from "../store/context/tasks-context";
+import { createTask } from "../util/http";
 
 function TaskInput(props) {
+  const tasksCtx = useContext(TasksContext);
   const [enteredTaskText, setEnteredTaskText] = useState("");
 
   function taskInputHandler(text) {
     setEnteredTaskText(text);
   }
 
-  function addTaskHandler() {
-    props.addTaskHandler(enteredTaskText);
+  async function addTaskHandler() {
+    const task = {
+      title: enteredTaskText,
+      description: "description RN",
+    };
+    await createTask(task);
+    props.addTaskHandler();
+    tasksCtx.addTask(task);
     setEnteredTaskText("");
   }
 
