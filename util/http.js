@@ -10,7 +10,7 @@ const axiosConfig = {
 };
 
 export async function createTask(data) {
-  await axios.post(
+  return await axios.post(
     `${BACKEND_URL}/tasks`,
     {
       title: data.title,

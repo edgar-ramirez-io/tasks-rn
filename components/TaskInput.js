@@ -23,9 +23,10 @@ function TaskInput(props) {
       title: enteredTaskText,
       description: "description RN",
     };
-    await createTask(task);
+    const response = await createTask(task);
+    const id = response.data.id;
     props.addTaskHandler();
-    tasksCtx.addTask(task);
+    tasksCtx.addTask({ ...task, id: id });
     setEnteredTaskText("");
   }
 
