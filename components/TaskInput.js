@@ -1,5 +1,6 @@
 import { useContext, useState } from "react";
 import {
+  Alert,
   Button,
   Image,
   Modal,
@@ -23,11 +24,14 @@ function TaskInput(props) {
       title: enteredTaskText,
       description: "description RN",
     };
-    const response = await createTask(task);
-    const id = response.data.id;
-    props.addTaskHandler();
-    tasksCtx.addTask({ ...task, id: id });
-    setEnteredTaskText("");
+    try {
+      const taskCreated = await createTask(task);
+      props.addTaskHandler();
+      tasksCtx.addTask({ ...task, id: taskCreated.id });
+      setEnteredTaskText("");
+    } catch (error) {
+      Alert.alert("Error", error.message);
+    }
   }
 
   function onClose() {

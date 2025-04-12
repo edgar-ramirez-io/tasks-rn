@@ -1,5 +1,5 @@
 import { useContext, useEffect } from "react";
-import { FlatList, StyleSheet, Text, View } from "react-native";
+import { Alert, FlatList, StyleSheet, Text, View } from "react-native";
 import { TasksContext } from "../store/context/tasks-context";
 import { getTasks } from "../util/http";
 import TaskItem from "./TaskItem";
@@ -13,8 +13,13 @@ function TasksList() {
 
   useEffect(() => {
     async function fetchTasks() {
-      const tasks = await getTasks();
-      tasksCtx.updateTasks(tasks);
+      try {
+        const tasks = await getTasks();
+        tasksCtx.updateTasks(tasks);
+      } catch (error) {
+        tasksCtx.updateTasks(undefined);
+        Alert.alert("Error", error.message);
+      }
     }
 
     fetchTasks();
@@ -22,10 +27,10 @@ function TasksList() {
 
   return (
     <View style={styles.tasksContainer}>
-      {tasksCtx.tasks.length == 0 && (
+      {(tasksCtx.tasks === undefined || tasksCtx.tasks.length == 0) && (
         <Text style={styles.noTasks}>No tasks</Text>
       )}
-      {tasksCtx.tasks.length > 0 && (
+      {tasksCtx.tasks !== undefined && tasksCtx.tasks.length > 0 && (
         <FlatList
           data={tasksCtx.tasks}
           keyExtractor={(item, index) => {

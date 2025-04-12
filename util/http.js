@@ -10,7 +10,7 @@ const axiosConfig = {
 };
 
 export async function createTask(data) {
-  return await axios.post(
+  const response = await axios.post(
     `${BACKEND_URL}/tasks`,
     {
       title: data.title,
@@ -18,6 +18,8 @@ export async function createTask(data) {
     },
     axiosConfig
   );
+
+  return response.data;
 }
 
 export async function getTasks() {
