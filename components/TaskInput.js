@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useState } from "react";
 import {
   Alert,
   Button,
@@ -8,11 +8,12 @@ import {
   TextInput,
   View,
 } from "react-native";
-import { TasksContext } from "../store/context/tasks-context";
 import { createTask } from "../util/http";
+import { useDispatch } from "react-redux";
+import { addTask } from "../store/redux/tasksReducer";
 
 function TaskInput({ addTaskHandler: addTaskHandlerProps, onClose, visible }) {
-  const tasksCtx = useContext(TasksContext);
+  const dispatch = useDispatch();
   const [enteredTaskText, setEnteredTaskText] = useState("");
 
   function taskInputHandler(text) {
@@ -27,7 +28,7 @@ function TaskInput({ addTaskHandler: addTaskHandlerProps, onClose, visible }) {
     try {
       const taskCreated = await createTask(task);
       addTaskHandlerProps();
-      tasksCtx.addTask({ ...task, id: taskCreated.id });
+      dispatch(addTask({ task: { ...task, id: taskCreated.id } }));
       setEnteredTaskText("");
     } catch (error) {
       Alert.alert("Error", error.message);

@@ -1,19 +1,21 @@
-import { useContext, useEffect } from "react";
+import { useEffect } from "react";
 import { Alert, FlatList, StyleSheet, Text, View } from "react-native";
-import { TasksContext } from "../store/context/tasks-context";
 import { getTasks } from "../util/http";
 import TaskItem from "./TaskItem";
+import { useDispatch, useSelector } from "react-redux";
+import { updateTasks } from "../store/redux/tasksReducer";
 
 function TasksList() {
-  const tasksCtx = useContext(TasksContext);
+  const tasks = useSelector((state) => state.tasks.tasks);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     async function fetchTasks() {
       try {
         const tasks = await getTasks();
-        tasksCtx.updateTasks(tasks);
+        dispatch(updateTasks({ tasks }));
       } catch (error) {
-        tasksCtx.updateTasks(undefined);
+        dispatch(updateTasks({ tasks: [] }));
         Alert.alert("Error", error.message);
       }
     }
@@ -23,12 +25,10 @@ function TasksList() {
 
   return (
     <View style={styles.tasksContainer}>
-      {(tasksCtx.tasks === undefined || tasksCtx.tasks.length == 0) && (
-        <Text style={styles.noTasks}>No tasks</Text>
-      )}
-      {tasksCtx.tasks !== undefined && tasksCtx.tasks.length > 0 && (
+      {tasks.length == 0 && <Text style={styles.noTasks}>No tasks</Text>}
+      {tasks.length > 0 && (
         <FlatList
-          data={tasksCtx.tasks}
+          data={tasks}
           keyExtractor={(item, index) => {
             return item.id;
           }}

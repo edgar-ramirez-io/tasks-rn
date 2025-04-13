@@ -1,14 +1,14 @@
-import { useContext } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
-import { TasksContext } from "../store/context/tasks-context";
+import { useDispatch } from "react-redux";
+import { removeTask } from "../store/redux/tasksReducer";
 
 function TaskItem({ id, text }) {
-  const tasksCtx = useContext(TasksContext);
+  const dispatch = useDispatch();
   return (
     <View style={styles.taskItem}>
       <Pressable
         onPress={() => {
-          tasksCtx.removeTask(id);
+          dispatch(removeTask({ id }));
         }}
         style={({ pressed }) => pressed && styles.pressedTask}
       >

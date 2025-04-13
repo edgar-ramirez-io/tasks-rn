@@ -1,9 +1,10 @@
 import { useState } from "react";
-import { Button, FlatList, StyleSheet, Text, View } from "react-native";
+import { Button, StyleSheet, View } from "react-native";
 import TaskInput from "./components/TaskInput";
 import { StatusBar } from "expo-status-bar";
-import TasksContextProvider from "./store/context/tasks-context";
 import TasksList from "./components/TasksList";
+import { Provider } from "react-redux";
+import { store } from "./store/redux/store";
 
 export default function App() {
   const [modalIsVisible, setModalIsVisible] = useState(false);
@@ -23,7 +24,7 @@ export default function App() {
   return (
     <>
       <StatusBar style="light" />
-      <TasksContextProvider>
+      <Provider store={store}>
         <View style={styles.appContainer}>
           <Button title="Add Task" color="#a065ec" onPress={showModal} />
           <TaskInput
@@ -33,7 +34,7 @@ export default function App() {
           />
         </View>
         <TasksList />
-      </TasksContextProvider>
+      </Provider>
     </>
   );
 }
