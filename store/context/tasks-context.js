@@ -1,4 +1,26 @@
-import { createContext, useState } from "react";
+import { createContext, useReducer } from "react";
+
+function taskReducer(state, action) {
+  if (action.type === "ADD_TASK") {
+    return { ...state, tasks: [...state.tasks, action.payload] };
+  }
+
+  if (action.type === "DELETE_TASK") {
+    const updatedTasks = [
+      ...state.tasks.filter((task) => task.id !== action.payload),
+    ];
+    return {
+      ...state,
+      tasks: updatedTasks,
+    };
+  }
+
+  if (action.type === "REPLACE_TASKS") {
+    return { ...state, tasks: [...action.payload] };
+  }
+
+  return state;
+}
 
 export const TasksContext = createContext({
   tasks: [],
@@ -8,22 +30,22 @@ export const TasksContext = createContext({
 });
 
 function TasksContextProvider({ children }) {
-  const [tasks, setTasks] = useState([]);
+  const [tasksState, tasksDispatch] = useReducer(taskReducer, { tasks: [] });
 
   function addTask(task) {
-    setTasks((oldTasks) => [...oldTasks, task]);
+    tasksDispatch({ type: "ADD_TASK", payload: task });
   }
 
   function removeTask(id) {
-    setTasks((oldTasks) => oldTasks.filter((task) => task.id !== id));
+    tasksDispatch({ type: "DELETE_TASK", payload: id });
   }
 
   function updateTasks(tasks) {
-    setTasks(tasks);
+    tasksDispatch({ type: "REPLACE_TASKS", payload: tasks || [] });
   }
 
   const value = {
-    tasks: tasks,
+    tasks: tasksState.tasks,
     addTask: addTask,
     removeTask: removeTask,
     updateTasks: updateTasks,

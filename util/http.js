@@ -9,12 +9,12 @@ const axiosConfig = {
   },
 };
 
-export async function createTask(data) {
+export async function createTask({ title, description }) {
   const response = await axios.post(
     `${BACKEND_URL}/tasks`,
     {
-      title: data.title,
-      description: data.description,
+      title,
+      description,
     },
     axiosConfig
   );
@@ -27,12 +27,12 @@ export async function getTasks() {
 
   const tasks = [];
   for (const value in response.data) {
-    const data = response.data[value];
+    const { id, description, status, title } = response.data[value];
     tasks.push({
-      description: data.description,
-      id: data.id,
-      status: data.status,
-      title: data.title,
+      description,
+      id,
+      status,
+      title,
     });
   }
 

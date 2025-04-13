@@ -1,13 +1,18 @@
+import { useContext } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
+import { TasksContext } from "../store/context/tasks-context";
 
-function TaskItem(props) {
+function TaskItem({ id, text }) {
+  const tasksCtx = useContext(TasksContext);
   return (
     <View style={styles.taskItem}>
       <Pressable
-        onPress={props.onDeleteItem.bind(this, props.id)}
+        onPress={() => {
+          tasksCtx.removeTask(id);
+        }}
         style={({ pressed }) => pressed && styles.pressedTask}
       >
-        <Text style={styles.itemText}>{props.text}</Text>
+        <Text style={styles.itemText}>{text}</Text>
       </Pressable>
     </View>
   );

@@ -7,10 +7,6 @@ import TaskItem from "./TaskItem";
 function TasksList() {
   const tasksCtx = useContext(TasksContext);
 
-  function deleteTaskHandler(id) {
-    tasksCtx.removeTask(id);
-  }
-
   useEffect(() => {
     async function fetchTasks() {
       try {
@@ -38,11 +34,7 @@ function TasksList() {
           }}
           renderItem={(itemData) => {
             return (
-              <TaskItem
-                text={itemData.item.title}
-                onDeleteItem={deleteTaskHandler}
-                id={itemData.item.id}
-              />
+              <TaskItem text={itemData.item.title} id={itemData.item.id} />
             );
           }}
         />

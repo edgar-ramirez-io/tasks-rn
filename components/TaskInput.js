@@ -11,7 +11,7 @@ import {
 import { TasksContext } from "../store/context/tasks-context";
 import { createTask } from "../util/http";
 
-function TaskInput(props) {
+function TaskInput({ addTaskHandler: addTaskHandlerProps, onClose, visible }) {
   const tasksCtx = useContext(TasksContext);
   const [enteredTaskText, setEnteredTaskText] = useState("");
 
@@ -26,7 +26,7 @@ function TaskInput(props) {
     };
     try {
       const taskCreated = await createTask(task);
-      props.addTaskHandler();
+      addTaskHandlerProps();
       tasksCtx.addTask({ ...task, id: taskCreated.id });
       setEnteredTaskText("");
     } catch (error) {
@@ -35,12 +35,12 @@ function TaskInput(props) {
   }
 
   function onClose() {
-    props.onClose();
+    onClose();
     setEnteredTaskText("");
   }
 
   return (
-    <Modal visible={props.visible} animationType="slide">
+    <Modal visible={visible} animationType="slide">
       <View style={styles.inputContainer}>
         <Image
           style={styles.image}
